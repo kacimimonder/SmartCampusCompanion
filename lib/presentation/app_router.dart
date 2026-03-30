@@ -38,7 +38,8 @@ class AppRouter {
   ) {
     return MaterialPageRoute<void>(
       settings: settings,
-      builder: (_) => HomeShell(viewModel: _viewModel, initialIndex: index.value),
+      builder: (_) =>
+          HomeShell(viewModel: _viewModel, initialIndex: index.value),
     );
   }
 }

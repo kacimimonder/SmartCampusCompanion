@@ -19,7 +19,7 @@ void main() {
 
 class MainApp extends StatelessWidget {
   const MainApp({required DashboardViewModel viewModel, super.key})
-      : _viewModel = viewModel;
+    : _viewModel = viewModel;
 
   final DashboardViewModel _viewModel;
 

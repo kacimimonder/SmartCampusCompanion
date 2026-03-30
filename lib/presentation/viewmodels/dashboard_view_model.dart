@@ -25,7 +25,8 @@ class DashboardViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
-  int get pendingClassesCount => _timetable.where((item) => !item.completed).length;
+  int get pendingClassesCount =>
+      _timetable.where((item) => !item.completed).length;
 
   TimetableItem? get nextClass {
     for (final item in _timetable) {
@@ -55,7 +56,8 @@ class DashboardViewModel extends ChangeNotifier {
       _events = results[1] as List<EventItem>;
       _timetable = results[2] as List<TimetableItem>;
     } catch (error) {
-      _errorMessage = 'Could not load campus data. Check internet and try again.';
+      _errorMessage =
+          'Could not load campus data. Check internet and try again.';
       if (kDebugMode) {
         print('DashboardViewModel.loadAllData error: $error');
       }

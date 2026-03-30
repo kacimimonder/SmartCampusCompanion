@@ -18,10 +18,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Text(
-          'Settings',
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
+        Text('Settings', style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 12),
         Card(
           child: SwitchListTile(

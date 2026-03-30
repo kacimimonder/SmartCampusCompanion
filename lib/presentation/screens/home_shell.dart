@@ -8,11 +8,7 @@ import 'settings_screen.dart';
 
 /// Main shell that hosts bottom navigation and maps route names to tabs.
 class HomeShell extends StatefulWidget {
-  const HomeShell({
-    required this.viewModel,
-    this.initialIndex = 0,
-    super.key,
-  });
+  const HomeShell({required this.viewModel, this.initialIndex = 0, super.key});
 
   final DashboardViewModel viewModel;
   final int initialIndex;

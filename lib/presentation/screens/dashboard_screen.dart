@@ -41,21 +41,27 @@ class DashboardScreen extends StatelessWidget {
             child: ListTile(
               leading: const Icon(Icons.schedule),
               title: const Text('Pending timetable items'),
-              subtitle: Text('${viewModel.pendingClassesCount} classes/tasks left'),
+              subtitle: Text(
+                '${viewModel.pendingClassesCount} classes/tasks left',
+              ),
             ),
           ),
           Card(
             child: ListTile(
               leading: const Icon(Icons.campaign_outlined),
               title: const Text('Announcements available'),
-              subtitle: Text('${viewModel.announcements.length} updates from campus'),
+              subtitle: Text(
+                '${viewModel.announcements.length} updates from campus',
+              ),
             ),
           ),
           Card(
             child: ListTile(
               leading: const Icon(Icons.event_available_outlined),
               title: const Text('Upcoming events loaded'),
-              subtitle: Text('${viewModel.events.length} event records fetched'),
+              subtitle: Text(
+                '${viewModel.events.length} event records fetched',
+              ),
             ),
           ),
           const SizedBox(height: 16),
@@ -70,7 +76,9 @@ class DashboardScreen extends StatelessWidget {
                 nextClass == null ? Icons.info_outline : Icons.class_outlined,
               ),
               title: Text(nextClass?.title ?? 'No pending class right now'),
-              subtitle: Text(nextClass == null ? 'All done for now.' : 'From timetable feed'),
+              subtitle: Text(
+                nextClass == null ? 'All done for now.' : 'From timetable feed',
+              ),
             ),
           ),
         ],

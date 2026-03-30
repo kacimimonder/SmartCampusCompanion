@@ -1,9 +1,6 @@
 /// Domain model for campus events used by the Events tab.
 class EventItem {
-  const EventItem({
-    required this.id,
-    required this.title,
-  });
+  const EventItem({required this.id, required this.title});
 
   final int id;
   final String title;
