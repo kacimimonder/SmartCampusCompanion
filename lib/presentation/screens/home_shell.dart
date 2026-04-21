@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../app_router.dart';
+import '../viewmodels/settings_view_model.dart';
 import '../viewmodels/dashboard_view_model.dart';
 import 'announcements_screen.dart';
 import 'dashboard_screen.dart';
@@ -8,9 +10,15 @@ import 'settings_screen.dart';
 
 /// Main shell that hosts bottom navigation and maps route names to tabs.
 class HomeShell extends StatefulWidget {
-  const HomeShell({required this.viewModel, this.initialIndex = 0, super.key});
+  const HomeShell({
+    required this.dashboardViewModel,
+    required this.settingsViewModel,
+    this.initialIndex = 0,
+    super.key,
+  });
 
-  final DashboardViewModel viewModel;
+  final DashboardViewModel dashboardViewModel;
+  final SettingsViewModel settingsViewModel;
   final int initialIndex;
 
   @override
@@ -27,10 +35,10 @@ class _HomeShellState extends State<HomeShell> {
 
     // We trigger first fetch after first frame so build can complete smoothly.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.viewModel.announcements.isEmpty &&
-          widget.viewModel.events.isEmpty &&
-          widget.viewModel.timetable.isEmpty) {
-        widget.viewModel.loadAllData();
+      if (widget.dashboardViewModel.announcements.isEmpty &&
+          widget.dashboardViewModel.events.isEmpty &&
+          widget.dashboardViewModel.timetable.isEmpty) {
+        widget.dashboardViewModel.loadAllData();
       }
     });
   }
@@ -38,26 +46,53 @@ class _HomeShellState extends State<HomeShell> {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: widget.viewModel,
+      animation: widget.dashboardViewModel,
       builder: (context, _) {
         return Scaffold(
           appBar: AppBar(
             title: const Text('SmartCampus Companion'),
             actions: [
               IconButton(
-                onPressed: widget.viewModel.loadAllData,
+                onPressed: widget.dashboardViewModel.loadAllData,
                 tooltip: 'Refresh data',
                 icon: const Icon(Icons.refresh),
               ),
             ],
           ),
-          body: IndexedStack(
-            index: _selectedIndex,
+          body: Column(
             children: [
-              DashboardScreen(viewModel: widget.viewModel),
-              AnnouncementsScreen(viewModel: widget.viewModel),
-              EventsScreen(viewModel: widget.viewModel),
-              const SettingsScreen(),
+              if (widget.dashboardViewModel.isOfflineMode)
+                Container(
+                  width: double.infinity,
+                  color: const Color(0xFFFFE8A3),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  child: Text(
+                    widget.dashboardViewModel.loadedFromCache
+                        ? 'Offline mode: showing cached campus data.'
+                        : 'Offline mode: no fresh data available.',
+                  ),
+                ),
+              Expanded(
+                child: IndexedStack(
+                  index: _selectedIndex,
+                  children: [
+                    DashboardScreen(viewModel: widget.dashboardViewModel),
+                    AnnouncementsScreen(viewModel: widget.dashboardViewModel),
+                    EventsScreen(viewModel: widget.dashboardViewModel),
+                    SettingsScreen(
+                      viewModel: widget.settingsViewModel,
+                      onOpenDeviceFeatures: () {
+                        Navigator.of(
+                          context,
+                        ).pushNamed(AppRoutes.deviceFeatures);
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
           bottomNavigationBar: NavigationBar(

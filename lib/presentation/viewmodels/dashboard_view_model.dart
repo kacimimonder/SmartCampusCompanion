@@ -17,6 +17,8 @@ class DashboardViewModel extends ChangeNotifier {
 
   bool _isLoading = false;
   String? _errorMessage;
+  bool _isOfflineMode = false;
+  bool _loadedFromCache = false;
 
   List<Announcement> get announcements => _announcements;
   List<EventItem> get events => _events;
@@ -24,6 +26,8 @@ class DashboardViewModel extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
+  bool get isOfflineMode => _isOfflineMode;
+  bool get loadedFromCache => _loadedFromCache;
 
   int get pendingClassesCount =>
       _timetable.where((item) => !item.completed).length;
@@ -46,18 +50,18 @@ class DashboardViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final results = await Future.wait([
-        _repository.getAnnouncements(),
-        _repository.getEvents(),
-        _repository.getTimetable(),
-      ]);
+      final dataBundle = await _repository.getDashboardData();
 
-      _announcements = results[0] as List<Announcement>;
-      _events = results[1] as List<EventItem>;
-      _timetable = results[2] as List<TimetableItem>;
+      _announcements = dataBundle.announcements;
+      _events = dataBundle.events;
+      _timetable = dataBundle.timetable;
+      _isOfflineMode = dataBundle.isOffline;
+      _loadedFromCache = dataBundle.loadedFromCache;
     } catch (error) {
       _errorMessage =
           'Could not load campus data. Check internet and try again.';
+      _isOfflineMode = true;
+      _loadedFromCache = false;
       if (kDebugMode) {
         print('DashboardViewModel.loadAllData error: $error');
       }

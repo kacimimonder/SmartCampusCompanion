@@ -12,4 +12,9 @@ class EventItem {
       title: json['title'] as String? ?? 'Untitled event',
     );
   }
+
+  /// Converts this model into a map so it can be stored in SQLite tables.
+  Map<String, dynamic> toMap() {
+    return {'id': id, 'title': title};
+  }
 }

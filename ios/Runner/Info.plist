@@ -26,6 +26,14 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>SmartCampus Companion uses location to show your position relative to campus points of interest.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>SmartCampus Companion uses camera access so you can attach photos to event notes.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>SmartCampus Companion uses photo library access so you can pick event note images.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>SmartCampus Companion may save related images for your event notes.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

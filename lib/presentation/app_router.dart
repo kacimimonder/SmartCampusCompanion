@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'screens/device_features_screen.dart';
 import 'screens/home_shell.dart';
 import 'viewmodels/dashboard_view_model.dart';
+import 'viewmodels/settings_view_model.dart';
 
 /// Named route constants keep route usage type-safe and easy to refactor.
 class AppRoutes {
@@ -9,13 +11,15 @@ class AppRoutes {
   static const String announcements = '/announcements';
   static const String events = '/events';
   static const String settings = '/settings';
+  static const String deviceFeatures = '/device-features';
 }
 
 /// Route generator centralizes navigation policy and tab mapping.
 class AppRouter {
-  const AppRouter(this._viewModel);
+  const AppRouter(this._dashboardViewModel, this._settingsViewModel);
 
-  final DashboardViewModel _viewModel;
+  final DashboardViewModel _dashboardViewModel;
+  final SettingsViewModel _settingsViewModel;
 
   Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -27,6 +31,11 @@ class AppRouter {
         return _materialRoute(HomeShellIndex.events, settings);
       case AppRoutes.settings:
         return _materialRoute(HomeShellIndex.settings, settings);
+      case AppRoutes.deviceFeatures:
+        return MaterialPageRoute<void>(
+          settings: settings,
+          builder: (_) => const DeviceFeaturesScreen(),
+        );
       default:
         return _materialRoute(HomeShellIndex.home, settings);
     }
@@ -38,8 +47,11 @@ class AppRouter {
   ) {
     return MaterialPageRoute<void>(
       settings: settings,
-      builder: (_) =>
-          HomeShell(viewModel: _viewModel, initialIndex: index.value),
+      builder: (_) => HomeShell(
+        dashboardViewModel: _dashboardViewModel,
+        settingsViewModel: _settingsViewModel,
+        initialIndex: index.value,
+      ),
     );
   }
 }

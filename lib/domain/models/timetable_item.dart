@@ -18,4 +18,9 @@ class TimetableItem {
       completed: json['completed'] as bool? ?? false,
     );
   }
+
+  /// Converts this model into a map so it can be stored in SQLite tables.
+  Map<String, dynamic> toMap() {
+    return {'id': id, 'title': title, 'completed': completed ? 1 : 0};
+  }
 }

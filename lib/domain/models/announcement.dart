@@ -18,4 +18,9 @@ class Announcement {
       body: json['body'] as String? ?? 'No details',
     );
   }
+
+  /// Converts this model into a map so it can be stored in SQLite tables.
+  Map<String, dynamic> toMap() {
+    return {'id': id, 'title': title, 'body': body};
+  }
 }
