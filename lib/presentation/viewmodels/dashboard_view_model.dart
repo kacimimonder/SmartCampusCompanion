@@ -46,9 +46,9 @@ class DashboardViewModel extends ChangeNotifier {
   Future<void> loadAllData({bool forceRefresh = false}) async {
     if (_isLoading) return;
 
-    final isCacheFresh = _lastLoadedAt != null &&
-        DateTime.now().difference(_lastLoadedAt!) <
-            const Duration(minutes: 5);
+    final isCacheFresh =
+        _lastLoadedAt != null &&
+        DateTime.now().difference(_lastLoadedAt!) < const Duration(minutes: 5);
 
     if (!forceRefresh && isCacheFresh && _announcements.isNotEmpty) {
       return;

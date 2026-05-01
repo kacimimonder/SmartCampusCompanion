@@ -39,7 +39,7 @@ class NotificationService {
     final settings = InitializationSettings(android: android, iOS: iOS);
 
     await _plugin.initialize(
-      settings,
+      settings: settings,
       onDidReceiveNotificationResponse: (response) async {
         final payload = response.payload;
         if (payload != null && payload.isNotEmpty) {
@@ -64,10 +64,7 @@ class NotificationService {
       return;
     }
 
-    final payload = jsonEncode({
-      'route': route ?? '/',
-      'extra': extra ?? {},
-    });
+    final payload = jsonEncode({'route': route ?? '/', 'extra': extra ?? {}});
 
     final androidDetails = AndroidNotificationDetails(
       'smartcampus_reminders',
@@ -79,17 +76,18 @@ class NotificationService {
 
     final iOSDetails = DarwinNotificationDetails();
 
-    final details = NotificationDetails(android: androidDetails, iOS: iOSDetails);
+    final details = NotificationDetails(
+      android: androidDetails,
+      iOS: iOSDetails,
+    );
 
     await _plugin.zonedSchedule(
-      id,
-      title,
-      body,
-      tz.TZDateTime.from(scheduledDate.toUtc(), tz.UTC),
-      details,
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
+      id: id,
+      title: title,
+      body: body,
+      scheduledDate: tz.TZDateTime.from(scheduledDate.toUtc(), tz.UTC),
+      notificationDetails: details,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       payload: payload,
     );
   }

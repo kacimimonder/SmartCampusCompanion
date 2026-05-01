@@ -99,6 +99,7 @@ class _HomeShellState extends State<HomeShell> {
                     EventsScreen(viewModel: widget.dashboardViewModel),
                     SettingsScreen(
                       viewModel: widget.settingsViewModel,
+                      dashboardViewModel: widget.dashboardViewModel,
                       onOpenDeviceFeatures: () {
                         Navigator.of(
                           context,
