@@ -29,8 +29,16 @@ void main() {
     test('returns decoded list for a successful response', () async {
       final client = ApiClient(
         client: _FakeClient((request) async {
-          expect(request.url.toString(), 'https://jsonplaceholder.typicode.com/posts');
-          return http.Response(jsonEncode([{'id': 1, 'title': 'Alpha'}]), 200);
+          expect(
+            request.url.toString(),
+            'https://jsonplaceholder.typicode.com/posts',
+          );
+          return http.Response(
+            jsonEncode([
+              {'id': 1, 'title': 'Alpha'},
+            ]),
+            200,
+          );
         }),
       );
 
@@ -51,7 +59,9 @@ void main() {
       expect(
         () => client.getList('/posts'),
         throwsA(
-          predicate((error) => error is ApiException && error.message.contains('500')),
+          predicate(
+            (error) => error is ApiException && error.message.contains('500'),
+          ),
         ),
       );
     });
@@ -66,7 +76,10 @@ void main() {
       expect(
         () => client.getList('/posts'),
         throwsA(
-          predicate((error) => error is ApiException && error.message.contains('JSON list')),
+          predicate(
+            (error) =>
+                error is ApiException && error.message.contains('JSON list'),
+          ),
         ),
       );
     });
