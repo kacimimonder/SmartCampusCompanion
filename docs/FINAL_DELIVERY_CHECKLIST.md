@@ -19,6 +19,7 @@ This checklist summarizes what remains for the final submission package and how 
 ### 1. Technical Report (8-15 pages)
 
 Include these sections:
+
 - Project overview and objective
 - Functional requirements mapping
 - Architecture overview (Presentation, Domain, Data, Core)
@@ -32,6 +33,7 @@ Include these sections:
 - Limitations and future work
 
 Suggested evidence to capture:
+
 - App screenshots for each major screen
 - Offline banner / cached-content screenshot
 - Notification scheduling screen
@@ -42,6 +44,7 @@ Suggested evidence to capture:
 ### 2. Demo Video (3-6 minutes)
 
 Suggested walkthrough order:
+
 1. Open app and show dashboard.
 2. Navigate between Home, Announcements, Events, and Settings.
 3. Show offline mode or explain cache fallback.
@@ -53,6 +56,7 @@ Suggested walkthrough order:
 ### 3. Presentation (5 minutes)
 
 Slide outline:
+
 - Problem and goals
 - Architecture and stack
 - Week-by-week implementation summary
@@ -63,6 +67,7 @@ Slide outline:
 ### 4. Repository Cleanup
 
 Before submission:
+
 - Confirm `flutter analyze` passes
 - Confirm repository tests pass
 - Ensure commit history is milestone-readable
