@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 
 import '../../core/services/biometric_service.dart';
+import '../../core/services/schedule_export_service.dart';
 import '../../data/repositories/settings_repository.dart';
 import '../../domain/models/app_settings.dart';
+import '../../domain/models/timetable_item.dart';
 
 /// ViewModel for settings and secure session token actions.
 class SettingsViewModel extends ChangeNotifier {
@@ -71,5 +73,14 @@ class SettingsViewModel extends ChangeNotifier {
     _biometricUnlocked = authenticated;
     notifyListeners();
     return authenticated;
+  }
+
+  /// Exports timetable items to a JSON file.
+  /// Takes a list of timetable items and returns the file path.
+  Future<String> exportTimetableSchedule(
+    List<TimetableItem> timetableItems,
+  ) async {
+    final exportService = ScheduleExportService();
+    return await exportService.exportTimetableAsJson(timetableItems);
   }
 }

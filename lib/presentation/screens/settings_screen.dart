@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 
 import '../../core/services/notification_service.dart';
+import '../viewmodels/dashboard_view_model.dart';
 import '../viewmodels/settings_view_model.dart';
 
 /// Week 3 settings screen with persisted preferences and secure session controls.
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({
     required this.viewModel,
+    required this.dashboardViewModel,
     required this.onOpenDeviceFeatures,
     super.key,
   });
 
   final SettingsViewModel viewModel;
+  final DashboardViewModel dashboardViewModel;
   final VoidCallback onOpenDeviceFeatures;
 
   @override
@@ -163,6 +166,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onPressed: widget.viewModel.clearSession,
                   icon: const Icon(Icons.logout),
                   label: const Text('Clear Session'),
+                ),
+                FilledButton.icon(
+                  onPressed: () async {
+                    final messenger = ScaffoldMessenger.of(context);
+                    try {
+                      final filePath = await widget.viewModel
+                          .exportTimetableSchedule(
+                            widget.dashboardViewModel.timetable,
+                          );
+                      if (!mounted) return;
+                      messenger.showSnackBar(
+                        SnackBar(
+                          content: Text('Schedule exported to: $filePath'),
+                        ),
+                      );
+                    } catch (e) {
+                      if (!mounted) return;
+                      messenger.showSnackBar(
+                        SnackBar(
+                          content: Text('Export failed: $e'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
+                  icon: const Icon(Icons.file_download_outlined),
+                  label: const Text('Export Schedule'),
                 ),
               ],
             ),
