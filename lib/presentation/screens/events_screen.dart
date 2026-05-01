@@ -33,7 +33,10 @@ class EventsScreen extends StatelessWidget {
       onRefresh: () => viewModel.loadAllData(forceRefresh: true),
       child: ListView.builder(
         padding: const EdgeInsets.all(16),
+        itemExtent: 75, // Fixed item height for better layout performance
         itemCount: viewModel.events.length,
+        addRepaintBoundaries: true, // Optimize painting
+        addAutomaticKeepAlives: true, // Keep visible items in cache
         itemBuilder: (context, index) {
           final event = viewModel.events[index];
           return Card(

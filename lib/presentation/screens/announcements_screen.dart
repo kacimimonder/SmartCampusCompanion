@@ -33,7 +33,10 @@ class AnnouncementsScreen extends StatelessWidget {
       onRefresh: () => viewModel.loadAllData(forceRefresh: true),
       child: ListView.builder(
         padding: const EdgeInsets.all(16),
+        itemExtent: 90, // Fixed item height for better layout performance
         itemCount: viewModel.announcements.length,
+        addRepaintBoundaries: true, // Optimize painting
+        addAutomaticKeepAlives: true, // Keep visible items in cache
         itemBuilder: (context, index) {
           final announcement = viewModel.announcements[index];
           return Card(
