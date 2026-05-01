@@ -14,6 +14,7 @@ import 'presentation/viewmodels/dashboard_view_model.dart';
 import 'presentation/viewmodels/settings_view_model.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   // Dependencies are composed at startup for a simple Clean Architecture-lite flow.
   final apiClient = const ApiClient();
   final remoteDataSource = CampusRemoteDataSource(apiClient);
@@ -39,6 +40,9 @@ Future<void> main() async {
   // reminders can be created early if needed.
   final notificationService = NotificationService(navigatorKey: navigatorKey);
   await notificationService.init();
+
+  // Load user settings (dark mode, notifications, language, tokens)
+  await settingsViewModel.load();
 
   runApp(
     MainApp(
@@ -66,13 +70,20 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final appRouter = AppRouter(_dashboardViewModel, _settingsViewModel);
 
-    return MaterialApp(
-      navigatorKey: navigatorKey,
-      debugShowCheckedModeBanner: false,
-      title: 'SmartCampus Companion',
-      theme: AppTheme.light(),
-      initialRoute: AppRoutes.home,
-      onGenerateRoute: appRouter.onGenerateRoute,
+    return AnimatedBuilder(
+      animation: _settingsViewModel,
+      builder: (context, _) {
+        return MaterialApp(
+          navigatorKey: navigatorKey,
+          debugShowCheckedModeBanner: false,
+          title: 'SmartCampus Companion',
+          theme: AppTheme.light(),
+          darkTheme: AppTheme.dark(),
+          themeMode: _settingsViewModel.settings.darkMode ? ThemeMode.dark : ThemeMode.light,
+          initialRoute: AppRoutes.home,
+          onGenerateRoute: appRouter.onGenerateRoute,
+        );
+      },
     );
   }
 }
