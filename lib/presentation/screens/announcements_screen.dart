@@ -21,7 +21,7 @@ class AnnouncementsScreen extends StatelessWidget {
     if (viewModel.errorMessage != null && viewModel.announcements.isEmpty) {
       return ContentStateView(
         message: viewModel.errorMessage!,
-        onRetry: viewModel.loadAllData,
+        onRetry: () => viewModel.loadAllData(forceRefresh: true),
       );
     }
 
@@ -30,7 +30,7 @@ class AnnouncementsScreen extends StatelessWidget {
     }
 
     return RefreshIndicator(
-      onRefresh: viewModel.loadAllData,
+      onRefresh: () => viewModel.loadAllData(forceRefresh: true),
       child: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: viewModel.announcements.length,

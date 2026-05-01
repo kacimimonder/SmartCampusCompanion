@@ -28,7 +28,7 @@ class DashboardScreen extends StatelessWidget {
     final nextClass = viewModel.nextClass;
 
     return RefreshIndicator(
-      onRefresh: viewModel.loadAllData,
+      onRefresh: () => viewModel.loadAllData(forceRefresh: true),
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [

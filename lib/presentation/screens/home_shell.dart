@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/services/background_refresh_service.dart';
 import '../app_router.dart';
 import '../viewmodels/settings_view_model.dart';
 import '../viewmodels/dashboard_view_model.dart';
@@ -27,20 +28,32 @@ class HomeShell extends StatefulWidget {
 
 class _HomeShellState extends State<HomeShell> {
   late int _selectedIndex;
+  late final BackgroundRefreshService _backgroundRefreshService;
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = widget.initialIndex;
+    _backgroundRefreshService = BackgroundRefreshService(
+      widget.dashboardViewModel,
+    );
 
     // We trigger first fetch after first frame so build can complete smoothly.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.dashboardViewModel.announcements.isEmpty &&
           widget.dashboardViewModel.events.isEmpty &&
           widget.dashboardViewModel.timetable.isEmpty) {
-        widget.dashboardViewModel.loadAllData();
+        widget.dashboardViewModel.loadAllData(forceRefresh: true);
       }
     });
+
+    _backgroundRefreshService.start();
+  }
+
+  @override
+  void dispose() {
+    _backgroundRefreshService.stop();
+    super.dispose();
   }
 
   @override
@@ -53,7 +66,9 @@ class _HomeShellState extends State<HomeShell> {
             title: const Text('SmartCampus Companion'),
             actions: [
               IconButton(
-                onPressed: widget.dashboardViewModel.loadAllData,
+                onPressed: () {
+                  widget.dashboardViewModel.loadAllData(forceRefresh: true);
+                },
                 tooltip: 'Refresh data',
                 icon: const Icon(Icons.refresh),
               ),

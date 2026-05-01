@@ -239,3 +239,4 @@ flutter run
 For complete requirement coverage and technical implementation planning (Weeks 1-8), see:
 
 - `docs/PROJECT_SPEC_AND_IMPLEMENTATION_PLAN.md`
+- `docs/AGENT_EXECUTION_PLAYBOOK.md`

@@ -19,6 +19,7 @@ class DashboardViewModel extends ChangeNotifier {
   String? _errorMessage;
   bool _isOfflineMode = false;
   bool _loadedFromCache = false;
+  DateTime? _lastLoadedAt;
 
   List<Announcement> get announcements => _announcements;
   List<EventItem> get events => _events;
@@ -42,8 +43,16 @@ class DashboardViewModel extends ChangeNotifier {
   }
 
   /// Loads all dashboard data in parallel for better perceived performance.
-  Future<void> loadAllData() async {
+  Future<void> loadAllData({bool forceRefresh = false}) async {
     if (_isLoading) return;
+
+    final isCacheFresh = _lastLoadedAt != null &&
+        DateTime.now().difference(_lastLoadedAt!) <
+            const Duration(minutes: 5);
+
+    if (!forceRefresh && isCacheFresh && _announcements.isNotEmpty) {
+      return;
+    }
 
     _isLoading = true;
     _errorMessage = null;
@@ -66,6 +75,7 @@ class DashboardViewModel extends ChangeNotifier {
         print('DashboardViewModel.loadAllData error: $error');
       }
     } finally {
+      _lastLoadedAt = DateTime.now();
       _isLoading = false;
       notifyListeners();
     }

@@ -1,22 +1,26 @@
 import 'package:flutter/foundation.dart';
 
+import '../../core/services/biometric_service.dart';
 import '../../data/repositories/settings_repository.dart';
 import '../../domain/models/app_settings.dart';
 
 /// ViewModel for settings and secure session token actions.
 class SettingsViewModel extends ChangeNotifier {
-  SettingsViewModel(this._settingsRepository);
+  SettingsViewModel(this._settingsRepository, this._biometricService);
 
   final SettingsRepository _settingsRepository;
+  final BiometricService _biometricService;
 
   AppSettings _settings = AppSettings.defaults();
   bool _isLoading = false;
   String? _sessionToken;
+  bool _biometricUnlocked = false;
 
   AppSettings get settings => _settings;
   bool get isLoading => _isLoading;
   String? get sessionToken => _sessionToken;
   bool get hasSessionToken => (_sessionToken ?? '').isNotEmpty;
+  bool get biometricUnlocked => _biometricUnlocked;
 
   Future<void> load() async {
     _isLoading = true;
@@ -58,6 +62,14 @@ class SettingsViewModel extends ChangeNotifier {
   Future<void> clearSession() async {
     await _settingsRepository.clearSessionToken();
     _sessionToken = null;
+    _biometricUnlocked = false;
     notifyListeners();
+  }
+
+  Future<bool> authenticateWithBiometrics() async {
+    final authenticated = await _biometricService.authenticate();
+    _biometricUnlocked = authenticated;
+    notifyListeners();
+    return authenticated;
   }
 }

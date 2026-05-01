@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/services/notification_service.dart';
 import '../viewmodels/settings_view_model.dart';
 
 /// Week 3 settings screen with persisted preferences and secure session controls.
@@ -88,10 +89,71 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.fingerprint),
+                title: const Text('Biometric Unlock Demo'),
+                subtitle: Text(
+                  widget.viewModel.biometricUnlocked
+                      ? 'Biometric session unlocked for this run.'
+                      : 'Use device biometrics to unlock the session.',
+                ),
+                trailing: FilledButton(
+                  onPressed: () async {
+                    final messenger = ScaffoldMessenger.of(context);
+                    final success = await widget.viewModel
+                        .authenticateWithBiometrics();
+
+                    if (!mounted) {
+                      return;
+                    }
+
+                    messenger.showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          success
+                              ? 'Biometric unlock succeeded.'
+                              : 'Biometric unlock is unavailable on this device.',
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('Unlock'),
+                ),
+              ),
+            ),
             Wrap(
               spacing: 10,
               runSpacing: 10,
               children: [
+                FilledButton.icon(
+                  onPressed: () async {
+                    final messenger = ScaffoldMessenger.of(context);
+                    final reminderTime = DateTime.now().add(
+                      const Duration(minutes: 1),
+                    );
+                    await NotificationService().scheduleReminder(
+                      id: 1001,
+                      scheduledDate: reminderTime,
+                      title: 'Campus reminder',
+                      body: 'Your demo campus reminder is ready to open.',
+                      route: '/events',
+                      extra: {'source': 'settings_demo'},
+                    );
+
+                    if (!mounted) {
+                      return;
+                    }
+
+                    messenger.showSnackBar(
+                      const SnackBar(
+                        content: Text('Demo reminder scheduled for 1 minute.'),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.notifications_active_outlined),
+                  label: const Text('Schedule Demo Reminder'),
+                ),
                 FilledButton.icon(
                   onPressed: widget.viewModel.saveDemoSessionToken,
                   icon: const Icon(Icons.save_alt),
@@ -120,7 +182,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: ListTile(
                 leading: Icon(Icons.info_outline),
                 title: Text('Version'),
-                subtitle: Text('v0.3.0 - Week 3 + Week 4 build'),
+                subtitle: Text('v0.4.0 - Week 5 notifications build'),
               ),
             ),
           ],
